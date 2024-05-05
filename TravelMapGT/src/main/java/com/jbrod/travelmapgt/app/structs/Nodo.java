@@ -91,6 +91,13 @@ public class Nodo {
         return -1; 
     }
     
+    public int obtenerTiempo(String destino){
+        if(tiempo.containsKey(destino)){
+            return tiempo.get(destino);
+        }
+        return -1;
+    }
+    
     
     
 

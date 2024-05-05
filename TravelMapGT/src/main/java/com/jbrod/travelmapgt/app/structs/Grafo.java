@@ -18,10 +18,8 @@ public class Grafo {
 
     private String grafico;
     
-    private LinkedList<LinkedList<Nodo>> rutasCaminando; 
-    private LinkedList<String> nombresRutasCaminando; 
-    private LinkedList<LinkedList<Nodo>> rutasConduciendo; 
-    private LinkedList<String> nombresRutasConduciendo; 
+    private LinkedList<Camino> rutasCaminando; 
+    private LinkedList<Camino> rutasConduciendo;
     
     // ESTRUCTURAS DEL GRAFO
     private LinkedList<Nodo> nodosDirigidos;
@@ -220,7 +218,8 @@ public class Grafo {
      *@param lista: String con la lista de nodos separados por espacios.
      */
     public void agregarLista(String lista){
-        LinkedList<Nodo> camino = new LinkedList();
+        
+        Camino ruta  = new Camino();
         String nodos[] = lista.split(" ");
         Nodo op;
         for (String nodo : nodos) {
@@ -231,16 +230,17 @@ public class Grafo {
             }
             
             if(nodo != null){
-                camino.add(op);
+                ruta.agregarNodo(op);
             }
         }
         if(dirigido){
-            rutasConduciendo.add(camino);
-            nombresRutasConduciendo.add(lista); 
+            rutasConduciendo.add(ruta);
         }else{
-            rutasCaminando.add(camino);
-            nombresRutasCaminando.add(lista);
+            rutasCaminando.add(ruta);
         }
+        
+        
+   
         //AGREGAR LA LISTA AL ARBOL
 
     }
@@ -263,7 +263,7 @@ public class Grafo {
     /* - - - - - - - - - - - - - - - - - - GRAFICOS - - - - - - - - - - - - - - - - - - */
     //Generar grafo general
     public void generarGrafico(){
-        grafico = "digraph G{\n";
+        grafico = "";
         
         LinkedList<Nodo> nodos;
         LinkedList<Nodo>adyacentes;
@@ -287,40 +287,66 @@ public class Grafo {
                 }   
             }
         }
-        grafico += "}";
         
         //Generar grafo
         ManejadorArchivos ma = new ManejadorArchivos();
-        ma.escribirArchivo("./Grafo.dot", grafico);
+        String graficoCompleto = "digraph G{\n" +  "   label =  Grafo general;\n"  + grafico + "}";
+        ma.escribirArchivo("./Grafo.dot", graficoCompleto);
         ma.generarGrafo("./Grafo.dot", "GrafoGeneral");
     }
     
     //Generar grafo con la mejor ruta
-    public void generarGraficoMejor(){
-       //1. obtener las rutas correspondientes.
-        LinkedList<LinkedList<Nodo>> rutas;
-        LinkedList<String> listaNombres; 
+    public void generarGraficoMejor(int mejorCriterio){
+       
+        //1. obtener las rutas correspondientes.
+        LinkedList<Camino> rutas;
         if(dirigido){
             rutas = rutasConduciendo;
-            listaNombres = nombresRutasConduciendo;  
         }else{
             rutas = rutasCaminando;
-            listaNombres = nombresRutasCaminando;  
         }
         
-        //2. Obtener la menor distancia posible
-        int posicionMenorDistancia = 2147483000; 
-        int menorDistanciaActual = -1;
+        //2. Obtener la menor opcion en base al criterio 
+        int menorOpcionCriterio = 2147483000;
+        Camino mejorCamino = null; 
         
-        Nodo nodoActual;
-        LinkedList<Nodo> listaActual;
-        int distanciaActual = 0; 
         //Recorrer la lista
-        for (int i = 0; i < rutas.size() -1; i++) {
-            nodoActual = rutas.get(i);
-            
-            
+        for (Camino ruta : rutas) {
+            if(ruta != null){
+                //Obtener su criterio
+                int op = 0 ;
+                switch (mejorCriterio) {
+                    case 1:
+                        //Menor distancia
+                        op = ruta.obtenerDistancia();
+                        break;
+                    case 2: 
+                        //Menor desgaste
+                        op = ruta.obtenerDesgaste();
+                    default:
+                        //Menor tiempo
+                        op = ruta.obtenerTiempo();
+                        break;
+                }
+                
+                //Si es menor que el criterio actual es mejor
+                if(op < menorOpcionCriterio){
+                    menorOpcionCriterio = op; 
+                    mejorCamino = ruta; 
+                }
+            }
         }
+        
+        //Generar el grafo.
+        ManejadorArchivos ma = new ManejadorArchivos();
+        String graficoCompleto = "digraph G{\n" +  "   label =  Grafo mejor camino;\n"  + grafico;
+        if(mejorCamino != null){
+            //Agregar los distintivos
+            graficoCompleto += mejorCamino.obtenerCaminoResaltado();
+        }
+        graficoCompleto += "}";
+        ma.escribirArchivo("./GrafoMejorCamino.dot", graficoCompleto);
+        ma.generarGrafo("./GrafoMejorCamino.dot", "GrafoMejorCamino");
     }
     
     
