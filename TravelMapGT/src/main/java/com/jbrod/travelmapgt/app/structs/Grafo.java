@@ -1,6 +1,7 @@
 
 package com.jbrod.travelmapgt.app.structs;
 
+import com.jbrod.travelmapgt.app.utilidades.ManejadorArchivos;
 import java.util.LinkedList;
 
 /**
@@ -13,7 +14,14 @@ public class Grafo {
     private boolean dirigido;
     private Nodo actual;
     private String origen;
-    private String destino; 
+    private String destino;
+
+    private String grafico;
+    
+    private LinkedList<LinkedList<Nodo>> rutasCaminando; 
+    private LinkedList<String> nombresRutasCaminando; 
+    private LinkedList<LinkedList<Nodo>> rutasConduciendo; 
+    private LinkedList<String> nombresRutasConduciendo; 
     
     // ESTRUCTURAS DEL GRAFO
     private LinkedList<Nodo> nodosDirigidos;
@@ -176,6 +184,7 @@ public class Grafo {
      * @param destino String con el nombre del nodo de destino.
      */
     public void buscarRutasConducir(String origen, String destino){
+        rutasConduciendo = new LinkedList<>();
         //Configurar el grafo en modo dirigido
         dirigido = true;
         //Buscar el nodo de origen 
@@ -194,6 +203,7 @@ public class Grafo {
      * @param destino: String con el nombre del nodo de destino.
      */
     public void buscarRutasCaminar(String origen, String destino){
+        rutasCaminando = new LinkedList<>();
         //Configurar el grafo en modo no dirigido 
         dirigido = false; 
         //Buscar el nodo de origen no dirigido
@@ -224,15 +234,94 @@ public class Grafo {
                 camino.add(op);
             }
         }
+        if(dirigido){
+            rutasConduciendo.add(camino);
+            nombresRutasConduciendo.add(lista); 
+        }else{
+            rutasCaminando.add(camino);
+            nombresRutasCaminando.add(lista);
+        }
         //AGREGAR LA LISTA AL ARBOL
 
     }
     
     
+    /* - - - - - - - - - - - - - - - - - - RECORRIDOS - - - - - - - - - - - - - - - - - - */
+    // Establecer el tipo de recorrido
+    public void establecerCaminata(){
+        dirigido = false; 
+    } 
+    public void establecerConduccion(){
+        dirigido = true;
+    }   
+
+
     
+
+
+
+    /* - - - - - - - - - - - - - - - - - - GRAFICOS - - - - - - - - - - - - - - - - - - */
+    //Generar grafo general
+    public void generarGrafico(){
+        grafico = "digraph G{\n";
+        
+        LinkedList<Nodo> nodos;
+        LinkedList<Nodo>adyacentes;
+        if(dirigido){
+            nodos = nodosDirigidos;
+        }else{
+            nodos = nodosNoDirigidos;
+        }
+        
+        //Recorrer la lista de nodos
+        String nombreActual; 
+        for (Nodo actual : nodos) {
+            if(actual != null){
+                nombreActual = actual.obtenerNombre();
+                adyacentes = actual.obtenerAdyacentes();
+                //Recorrer nodos de actual
+                for (Nodo adyacente : adyacentes) {
+                    if(adyacente != null){
+                        grafico += "       " + nombreActual + " -> " + adyacente.obtenerNombre() + ";\n";
+                    }
+                }   
+            }
+        }
+        grafico += "}";
+        
+        //Generar grafo
+        ManejadorArchivos ma = new ManejadorArchivos();
+        ma.escribirArchivo("./Grafo.dot", grafico);
+        ma.generarGrafo("./Grafo.dot", "GrafoGeneral");
+    }
     
-    
-    
+    //Generar grafo con la mejor ruta
+    public void generarGraficoMejor(){
+       //1. obtener las rutas correspondientes.
+        LinkedList<LinkedList<Nodo>> rutas;
+        LinkedList<String> listaNombres; 
+        if(dirigido){
+            rutas = rutasConduciendo;
+            listaNombres = nombresRutasConduciendo;  
+        }else{
+            rutas = rutasCaminando;
+            listaNombres = nombresRutasCaminando;  
+        }
+        
+        //2. Obtener la menor distancia posible
+        int posicionMenorDistancia = 2147483000; 
+        int menorDistanciaActual = -1;
+        
+        Nodo nodoActual;
+        LinkedList<Nodo> listaActual;
+        int distanciaActual = 0; 
+        //Recorrer la lista
+        for (int i = 0; i < rutas.size() -1; i++) {
+            nodoActual = rutas.get(i);
+            
+            
+        }
+    }
     
     
     
