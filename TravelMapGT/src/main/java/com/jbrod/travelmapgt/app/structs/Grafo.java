@@ -9,29 +9,39 @@ import java.util.LinkedList;
  */
 public class Grafo {
 
+    // CONFIGURACION DEL GRAFO
+    private boolean dirigido;
+    private Nodo actual;
+    private String origen;
+    private String destino; 
+    
+    // ESTRUCTURAS DEL GRAFO
     private LinkedList<Nodo> nodosDirigidos;
-    private LinkedList<Nodo> nodosNoDirigidos;
+    private LinkedList<Nodo> nodosNoDirigidos; 
     
     public Grafo(){
         nodosDirigidos = new LinkedList<>(); 
         nodosNoDirigidos = new LinkedList<>();
     }
     
-    
+    /**
+     * Agrega un nodo en base a un nombre (si no se encontraba ya) a la lista de nodos dirigidos y no dirigidos.
+     * @param nombre: String con el nombre que tendra el nodo.
+     **/
     public void agregarNodo(String nombre){
         String mensaje = "Se quiso agregar el nodo "+  nombre + " pero ya se encontraba en el grafo.";
         
         Nodo resultado = buscarNodoDirigido(nombre);
         if(resultado == null){
             //Agrega el nodo en ambas listas
-            Nodo nuevoDirigido   = new Nodo(nombre);
+            Nodo nuevoDirigido   = new Nodo(nombre, this);
             nodosDirigidos.add(nuevoDirigido);
             mensaje = nombre + " agregado al grafo correctamente."; 
         }
         
         resultado = buscarNodoNoDirigido(nombre);
         if(resultado == null){
-            Nodo nuevoNoDirigido = new Nodo(nombre);
+            Nodo nuevoNoDirigido = new Nodo(nombre, this);
             nodosNoDirigidos.add(nuevoNoDirigido);
             mensaje = nombre + " agregado al grafo correctamente.";
         }
@@ -72,8 +82,6 @@ public class Grafo {
         // - pesos
         nodoOrigenDirigido.agregarValores(destino, tiempo_vehiculo, distancia, consumo_gas);
         
-        
-        
         //3. Establecer adyacencia y pesos NO DIRIGIDO (pie)
         Nodo nodoA = buscarNodoNoDirigido(origen);
         Nodo nodoB = buscarNodoNoDirigido(destino);
@@ -92,17 +100,14 @@ public class Grafo {
                 System.out.println("El nodo " + destino + " no existe.");
             }
         }
-        
-        
-        
-        
-        
     }
     
     
-    
-    
-    
+    /**
+     * Establece vecindad entre dos nodos (tanto en la lista de nodos dirigidos como en la de no dirigidos) en base a los nombres de origen y destino.
+     * @param origen: String con el nomrbe del nodo de origen.
+     * @param destino: String con el nombre del nodo de destino.
+     **/
     public void establecerAdyacencia(String origen, String destino){
         //1. Obtener los nodos origen y destino de la lista de dirigidos
         Nodo nodoOrigen = buscarNodoDirigido(origen);
@@ -128,7 +133,11 @@ public class Grafo {
     }
     
     
-    
+    /**
+     * Busca un nodo en la lista de nodos dirigidos en base a un nombre.
+     * @param nombre: String con el nombre del nodo a buscar.
+     * @return Nodo resultado de la busqueda. null si no se encuentra en la lista de nodos.
+     **/
     public Nodo buscarNodoDirigido(String nombre){
         for (int i = 0; i < nodosDirigidos.size(); i++) {
             Nodo actual = nodosDirigidos.get(i);
@@ -141,7 +150,11 @@ public class Grafo {
         return null; 
     }
     
-    
+    /**
+     * Busca un nodo en la lista de nodos no dirigidos en base a su nombre.
+     * @param nombre: String con el nombre del nodo a buscar.
+     * @return Nodo resultado de la bsuqueda, null si no se encuentra en la lista.
+     **/
     public Nodo buscarNodoNoDirigido(String nombre){
         for (int i = 0; i < nodosNoDirigidos.size(); i++) {
             Nodo actual = nodosNoDirigidos.get(i);
@@ -156,8 +169,15 @@ public class Grafo {
     
     
     
-    //Buscar la forma de llegar a un destino (Nodos dirigidos)
-    public void conducir(String origen, String destino){
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - OBTENCION DE RUTAS - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    
+    /**Buscar la forma de llegar a un destino en modo de conduccion (Nodos dirigidos)
+     * @param origen: String con el nombre del nodo de origen.
+     * @param destino String con el nombre del nodo de destino.
+     */
+    public void buscarRutasConducir(String origen, String destino){
+        //Configurar el grafo en modo dirigido
+        dirigido = true;
         //Buscar el nodo de origen 
         Nodo nodoOrigen = buscarNodoDirigido(origen);
         if(nodoOrigen != null){
@@ -169,10 +189,14 @@ public class Grafo {
         
     }
     
-    //Buscar la forma de llegar a un destino (Nodos no dirigidos)
-    public void caminar(String origen, String destino){
-        //Obtener el primer nodo no dirigido
-        //Buscar el nodo de origen 
+    /**Buscar la forma de llegar a un destino en modo caminata (Nodos no dirigidos)
+     * @param origen: String con el nombre del nodo de origen.
+     * @param destino: String con el nombre del nodo de destino.
+     */
+    public void buscarRutasCaminar(String origen, String destino){
+        //Configurar el grafo en modo no dirigido 
+        dirigido = false; 
+        //Buscar el nodo de origen no dirigido
         Nodo nodoOrigen = buscarNodoNoDirigido(origen);
         if(nodoOrigen != null){
             String listaBusqueda = "";
@@ -181,7 +205,36 @@ public class Grafo {
             System.out.println("El origen: " + origen + " no existe.");
         }
     }
+    
+    /**Agregar una lista de nodos al arbol de soluciones
+     *@param lista: String con la lista de nodos separados por espacios.
+     */
+    public void agregarLista(String lista){
+        LinkedList<Nodo> camino = new LinkedList();
+        String nodos[] = lista.split(" ");
+        Nodo op;
+        for (String nodo : nodos) {
+            if(dirigido){
+                op = buscarNodoDirigido(nodo);
+            }else{
+                op = buscarNodoNoDirigido(nodo);
+            }
+            
+            if(nodo != null){
+                camino.add(op);
+            }
+        }
+        //AGREGAR LA LISTA AL ARBOL
 
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

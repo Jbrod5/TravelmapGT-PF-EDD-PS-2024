@@ -11,21 +11,25 @@ import java.util.Map;
  */
 public class Nodo {
     
+    private Grafo grafo; 
+    
     private String nombre;
     private LinkedList <Nodo> adyacentes;
     
     //Almacenar pesos y resistencias
-    Map<String, Integer> distancia; 
-    Map<String, Integer> tiempo; 
-    Map<String, Integer> resistencia; 
+    private Map<String, Integer> distancia; 
+    private Map<String, Integer> tiempo; 
+    private Map<String, Integer> resistencia; 
     
-    public Nodo(String nombre){
+    public Nodo(String nombre, Grafo grafo){
         this.nombre = nombre;
         adyacentes = new LinkedList<>();
         
         distancia = new HashMap<>();
         resistencia = new HashMap<>();
         tiempo = new HashMap<>();
+        
+        this.grafo = grafo; 
     }
     
     public LinkedList<Nodo> obtenerAdyacentes(){
@@ -42,6 +46,7 @@ public class Nodo {
         //Destino encontrado, imprimir la ruta
         if(destino.equals(nombre)){
             System.out.println("Destino encontrado con la ruta: " + listaNodos);
+            grafo.agregarLista(listaNodos);
         }else{
             //Seguir buscando
             for (Nodo adyacente : adyacentes) {

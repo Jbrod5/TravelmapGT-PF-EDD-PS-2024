@@ -45,10 +45,10 @@ public class TravelMapGT {
         
         
         System.out.println("DIRIGIDO");
-        grafo.conducir(origen, destino);
+        grafo.buscarRutasConducir(origen, destino);
         System.out.println("");
         System.out.println("NO DIRIGIDO");
-        grafo.caminar(origen, destino);
+        grafo.buscarRutasCaminar(origen, destino);
         
     }
 }
