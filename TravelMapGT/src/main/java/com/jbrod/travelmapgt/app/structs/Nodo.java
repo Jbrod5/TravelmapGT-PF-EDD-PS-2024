@@ -25,6 +25,7 @@ public class Nodo {
         
         distancia = new HashMap<>();
         resistencia = new HashMap<>();
+        tiempo = new HashMap<>();
     }
     
     public LinkedList<Nodo> obtenerAdyacentes(){
@@ -33,6 +34,27 @@ public class Nodo {
     
     public String obtenerNombre(){
         return nombre; 
+    }
+    
+    public void buscarNodo(String listaNodos, String destino){
+        listaNodos += nombre + " "; 
+        
+        //Destino encontrado, imprimir la ruta
+        if(destino.equals(nombre)){
+            System.out.println("Destino encontrado con la ruta: " + listaNodos);
+        }else{
+            //Seguir buscando
+            for (Nodo adyacente : adyacentes) {
+                if(adyacente != null){
+                
+                    //Si el nodo no esta ya en la lista de busqueda, buscar en el 
+                    if(! (listaNodos.contains( adyacente.obtenerNombre())) ){
+                        adyacente.buscarNodo(listaNodos, destino);
+                    }
+                }
+            }
+        
+        }
     }
     
     
@@ -70,6 +92,13 @@ public class Nodo {
     public void agregarAdyacente(Nodo nodo){
         if(nodo != null){
             adyacentes.add(nodo);
+        }
+    }
+    
+    
+    public void mostrarAdyacentes(){
+        for (int i = 0; i < adyacentes.size(); i++) {
+            System.out.println(adyacentes.get(i).obtenerNombre());
         }
     }
 }

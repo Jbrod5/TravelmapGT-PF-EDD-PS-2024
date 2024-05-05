@@ -16,7 +16,7 @@ public class ArchivoEntrada {
             String line;
             int contador = 0; 
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split("|");
+                String[] parts = line.split("\\|");
                 contador++;
                 // Orden: origen|destino|tiempo_vehiculo|tiempo_pie|consumo_gas|desgaste_persona|distancia
                 try{
@@ -40,6 +40,11 @@ public class ArchivoEntrada {
 
                     
                     //Crear los nodos
+                    grafo.generarPar(origen, destino, 
+                            tiempoVehiculo, tiempoPie, 
+                            consumoGas, desgastePersona, 
+                            distancia);
+                    
                     
                 }catch(NumberFormatException nfe){
                     System.out.println("Hubo un error de formateo numerico en la linea: " + contador);

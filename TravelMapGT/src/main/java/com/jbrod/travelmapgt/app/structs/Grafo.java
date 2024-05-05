@@ -12,6 +12,12 @@ public class Grafo {
     private LinkedList<Nodo> nodosDirigidos;
     private LinkedList<Nodo> nodosNoDirigidos;
     
+    public Grafo(){
+        nodosDirigidos = new LinkedList<>(); 
+        nodosNoDirigidos = new LinkedList<>();
+    }
+    
+    
     public void agregarNodo(String nombre){
         String mensaje = "Se quiso agregar el nodo "+  nombre + " pero ya se encontraba en el grafo.";
         
@@ -136,8 +142,6 @@ public class Grafo {
     }
     
     
-    
-    
     public Nodo buscarNodoNoDirigido(String nombre){
         for (int i = 0; i < nodosNoDirigidos.size(); i++) {
             Nodo actual = nodosNoDirigidos.get(i);
@@ -148,5 +152,59 @@ public class Grafo {
         }
         //No se encontro
         return null; 
+    }
+    
+    
+    
+    //Buscar la forma de llegar a un destino (Nodos dirigidos)
+    public void conducir(String origen, String destino){
+        //Buscar el nodo de origen 
+        Nodo nodoOrigen = buscarNodoDirigido(origen);
+        if(nodoOrigen != null){
+            String listaBusqueda = "";
+            nodoOrigen.buscarNodo(listaBusqueda, destino);
+        }else{
+            System.out.println("El origen: " + origen + " no existe.");
+        }
+        
+    }
+    
+    //Buscar la forma de llegar a un destino (Nodos no dirigidos)
+    public void caminar(String origen, String destino){
+        //Obtener el primer nodo no dirigido
+        //Buscar el nodo de origen 
+        Nodo nodoOrigen = buscarNodoNoDirigido(origen);
+        if(nodoOrigen != null){
+            String listaBusqueda = "";
+            nodoOrigen.buscarNodo(listaBusqueda, destino);
+        }else{
+            System.out.println("El origen: " + origen + " no existe.");
+        }
+    }
+
+    
+    
+    
+    
+    public void imprimirDirigido(){
+        System.out.println("DIRIGIDO");
+        for (Nodo nodosDirigido : nodosDirigidos) {
+            System.out.println(nodosDirigido.obtenerNombre());
+            nodosDirigido.mostrarAdyacentes();
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+        }
+    }
+    
+        public void imprimirNoDirigido(){
+        System.out.println("NO DIRIGIDO");
+        for (Nodo nodosDirigido : nodosNoDirigidos) {
+            System.out.println(nodosDirigido.obtenerNombre());
+            nodosDirigido.mostrarAdyacentes();
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+        }
     }
 }
