@@ -13,6 +13,7 @@ public class Camino {
     int desgaste; 
     int distancia; 
     int tiempo; 
+    String cam; 
     
     public Camino(){
         camino = new LinkedList<>();
@@ -36,7 +37,13 @@ public class Camino {
         camino.add(nodo);
     }
     
+    public void establecerCam(String cam){
+        this.cam = cam; 
+    }
     
+    public String obtenerCam(){
+        return cam; 
+    }
     
     
     public int obtenerDesgaste(){

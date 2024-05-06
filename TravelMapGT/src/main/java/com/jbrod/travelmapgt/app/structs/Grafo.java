@@ -221,6 +221,7 @@ public class Grafo {
     public void agregarLista(String lista){
         
         Camino ruta  = new Camino();
+        ruta.establecerCam(lista);
         String nodos[] = lista.split(" ");
         Nodo op;
         for (String nodo : nodos) {

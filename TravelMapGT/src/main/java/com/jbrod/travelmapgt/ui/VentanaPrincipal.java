@@ -171,7 +171,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
             String [][] tabla = new String[posiblesRutas.size()][4];
             for (Camino ruta : posiblesRutas) {
-                tabla[contador][0] = ruta.obtenerRuta();
+                //tabla[contador][0] = ruta.obtenerRuta();
+                tabla[contador][0] = ruta.obtenerCam();
                 tabla[contador][1] = Integer.toString(ruta.obtenerTiempo());
                 tabla[contador][2] = Integer.toString(ruta.obtenerDesgaste());
                 tabla[contador][3] = Integer.toString(ruta.obtenerDistancia());
@@ -238,6 +239,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         lblTiempo = new javax.swing.JLabel();
         lblDesgaste = new javax.swing.JLabel();
         lblDistancia = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         txfPasos = new javax.swing.JTextField();
         btnVerRutas = new javax.swing.JButton();
         scrlGrafo = new javax.swing.JScrollPane();
@@ -389,6 +391,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 txfPasosActionPerformed(evt);
             }
         });
+        jScrollPane1.setViewportView(txfPasos);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -401,21 +404,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addComponent(lblDesgaste)
                     .addComponent(lblDistancia))
                 .addContainerGap(123, Short.MAX_VALUE))
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(txfPasos)
-                .addContainerGap())
+            .addComponent(jScrollPane1)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblTiempo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDesgaste)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDistancia)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txfPasos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         btnVerRutas.setText("Ver posibles rutas");
@@ -450,9 +451,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnVerRutas)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         lblImagen.setOpaque(true);
@@ -475,8 +476,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(scrlGrafo))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(scrlGrafo, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
 
         pack();
@@ -589,6 +591,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblDesgaste;
     private javax.swing.JLabel lblDistancia;
     private javax.swing.JLabel lblImagen;
