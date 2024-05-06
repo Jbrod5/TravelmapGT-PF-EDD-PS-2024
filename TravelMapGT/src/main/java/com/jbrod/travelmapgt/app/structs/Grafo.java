@@ -3,6 +3,7 @@ package main.java.com.jbrod.travelmapgt.app.structs;
 
 import main.java.com.jbrod.travelmapgt.app.utilidades.ManejadorArchivos;
 import java.util.LinkedList;
+import main.java.com.jbrod.travelmapgt.ui.VentanaPrincipal;
 
 /**
  * Clase que representa un grafo (dirigido y no dirigido).
@@ -262,9 +263,10 @@ public class Grafo {
     }
     
     //Establece el actual / permite que se mueva
-    public void establecerAcual(Nodo nodoActual){
+    public void establecerAcual(Nodo nodoActual, VentanaPrincipal ventana){
         if(destino.equals(nodoActual.obtenerNombre())){
             //Informar al fronend que ya se llego
+            ventana.avisarLlegada();
         }else{
             //Recalcular rutas
             origen = nodoActual.obtenerNombre();
@@ -274,6 +276,7 @@ public class Grafo {
                 buscarRutasConducir(origen, destino);
             }
             //Actualizar el frontend
+            ventana.actualizarImagenGrafo();
         }
     }
 

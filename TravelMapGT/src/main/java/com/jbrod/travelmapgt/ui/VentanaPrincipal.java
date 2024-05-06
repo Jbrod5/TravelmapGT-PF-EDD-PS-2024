@@ -1,16 +1,19 @@
 package main.java.com.jbrod.travelmapgt.ui;
 
+import java.awt.Dimension;
 import java.io.File;
 import main.java.com.jbrod.travelmapgt.app.structs.ArchivoEntrada;
 import main.java.com.jbrod.travelmapgt.app.structs.Grafo;
 import main.java.com.jbrod.travelmapgt.app.structs.Nodo;
 import java.util.LinkedList;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel; 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 /**
@@ -21,7 +24,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private Grafo grafo;
     private LinkedList<Nodo> listaNodos;
+    private LinkedList<Nodo> listaPasos;
+    private Nodo nodoActual; 
+    //private JScrollPane scrlGrafo;
+    //private JLabel imagen;
     
+    private String pathGrafo;
     
     public VentanaPrincipal() {
         initComponents();
@@ -33,7 +41,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         cbxOpcionMejorCamino.addItem("Menor distancia");
         cbxOpcionMejorCamino.addItem("Menor desgaste");
         cbxOpcionMejorCamino.addItem("Menor tiempo");
-
+        //imagen = new JLabel();
+        //scrlGrafo.setViewportView(imagen);
     }
     
     private void generarGrafo(){
@@ -60,13 +69,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         grafo.generarGrafico();
         
         obtenerListaNodos();
+        
+        
     }
     
     private void obtenerListaNodos(){
         if(chxDirigido.isSelected()){
             listaNodos = grafo.obtenerNodosDirigidos();
+            listaNodos = grafo.establecerConduccion();
         }else{
             listaNodos = grafo.obtenerNodosNoDirigidos();
+            listaNodos = grafo.establecerCaminata();
         }
         
         //Colocar las opciones de entrada 
@@ -84,20 +97,33 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         if(chkVerMejorcamino.isSelected()){
             //Cargar el mejor camino
             grafo.generarGraficoMejor(cbxOpcionMejorCamino.getSelectedIndex() +1);
-            pathGrafo = "./GrafoMejorCamino.png";
+            this.pathGrafo = "./GrafoMejorCamino.png";
         }else{
-            pathGrafo = "./GrafoGeneral.png";
+            this.pathGrafo = "./GrafoGeneral.png";
         }
+        pathGrafo = this.pathGrafo;
         //scrlGrafo.removeAll();
         //Crear la imagen
-        JLabel imagen = new JLabel();
-        ImageIcon imageIcon = new ImageIcon(pathGrafo);
-        imagen.setIcon(imageIcon);
+        Icon imageIcon = new ImageIcon(pathGrafo);
+        lblImagen.setIcon(imageIcon);
+        //Dimension dim = new Dimension(imageIcon.getImage().getWidth(this), imageIcon.getImage().getHeight(this));
+        //scrlGrafo.getViewport().setViewSize(dim);
         
-        scrlGrafo = new JScrollPane();
-        scrlGrafo.setViewportView(imagen);
-        //pnlImagen.add(imagen);
+        //remove(scrlGrafo);
+        //scrlGrafo = new JScrollPane();
+        //add(scrlGrafo);
+        //scrlGrafo.setViewportView(imagen);
+        //try{
+        //    pnlImagen.remove(scrlGrafo);
+        //}catch(Exception e){
+            
+        //}
+        
+        //scrlGrafo = new JScrollPane();
+        //scrlGrafo.setViewportView(imagen);
+        //pnlImagen.add(scrlGrafo);
         //pnlImagen.add(new JLabel("feli"));
+        
         
         //Cargar la imagen
         //
@@ -110,8 +136,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             System.out.println("El archivo no existe");
         }
 
-        scrlGrafo.updateUI();
-        repaint();
+        //scrlGrafo.updateUI();
+        //repaint();
     }
     
     
@@ -146,14 +172,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         chxDirigido = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        cbxPaso = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         scrlGrafo = new javax.swing.JScrollPane();
-        pnlImagen = new javax.swing.JPanel();
+        lblImagen = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -195,10 +221,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel1.setText("Origen");
 
         cbxOrigen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxOrigen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxOrigenActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Destino");
 
         cbxDestino.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxDestino.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxDestinoActionPerformed(evt);
+            }
+        });
 
         chxDirigido.setSelected(true);
         chxDirigido.setText("Conduciendo (dirigido)");
@@ -244,9 +280,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jLabel3.setText("Mover hacia: ");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxPaso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setText("Mover");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -258,7 +299,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cbxPaso, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(47, 47, 47)
@@ -270,7 +311,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbxPaso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addGap(0, 11, Short.MAX_VALUE))
@@ -335,18 +376,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout pnlImagenLayout = new javax.swing.GroupLayout(pnlImagen);
-        pnlImagen.setLayout(pnlImagenLayout);
-        pnlImagenLayout.setHorizontalGroup(
-            pnlImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 665, Short.MAX_VALUE)
-        );
-        pnlImagenLayout.setVerticalGroup(
-            pnlImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 553, Short.MAX_VALUE)
-        );
-
-        scrlGrafo.setViewportView(pnlImagen);
+        lblImagen.setOpaque(true);
+        scrlGrafo.setViewportView(lblImagen);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -355,17 +386,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(scrlGrafo, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrlGrafo, javax.swing.GroupLayout.DEFAULT_SIZE, 683, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(scrlGrafo)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scrlGrafo))
                 .addContainerGap())
         );
 
@@ -383,18 +414,66 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         actualizarImagenGrafo();
     }//GEN-LAST:event_chkVerMejorcaminoActionPerformed
+
+    
+            int cont = 1;
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try{
+            nodoActual = listaPasos.get(cbxPaso.getSelectedIndex());
+            grafo.establecerAcual(nodoActual, this);
+            listaPasos = nodoActual.obtenerAdyacentes();
+            colocarNuevosPasos();
+        }catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cbxOrigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxOrigenActionPerformed
+        // TODO add your handling code here:
+        try{
+            nodoActual = listaNodos.get(cbxOrigen.getSelectedIndex());
+            grafo.establecerAcual(nodoActual, this);
+            listaPasos = nodoActual.obtenerAdyacentes();
+            colocarNuevosPasos();
+        }catch(Exception e){
+            
+        }
+    }//GEN-LAST:event_cbxOrigenActionPerformed
+
+    private void cbxDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxDestinoActionPerformed
+        // TODO add your handling code here:
+        try{
+            Nodo destino = listaNodos.get(cbxDestino.getSelectedIndex());
+            grafo.establecerDestino(destino.obtenerNombre());
+        }catch(Exception e){
+        
+        }
+    }//GEN-LAST:event_cbxDestinoActionPerformed
  
     
+    private void colocarNuevosPasos(){
+        cbxPaso.removeAllItems();
+        for (Nodo listaPaso : listaPasos) {
+            cbxPaso.addItem(listaPaso.obtenerNombre());
+        }
+    }
     
+    
+    public void avisarLlegada(){
+        String mensaje = "Llego al destino!";
+        JOptionPane.showMessageDialog(null, mensaje);
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbxDestino;
     private javax.swing.JComboBox<String> cbxOpcionMejorCamino;
     private javax.swing.JComboBox<String> cbxOrigen;
+    private javax.swing.JComboBox<String> cbxPaso;
     private javax.swing.JCheckBox chkVerMejorcamino;
     private javax.swing.JCheckBox chxDirigido;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -406,7 +485,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel pnlImagen;
+    private javax.swing.JLabel lblImagen;
     private javax.swing.JScrollPane scrlGrafo;
     // End of variables declaration//GEN-END:variables
 }
