@@ -294,8 +294,10 @@ public class Grafo {
         LinkedList<Nodo>adyacentes;
         if(dirigido){
             nodos = nodosDirigidos;
+            System.out.println("Dirigido: " + dirigido);
         }else{
             nodos = nodosNoDirigidos;
+                        System.out.println("Dirigido: " + dirigido);
         }
         
         //Recorrer la lista de nodos
@@ -315,7 +317,7 @@ public class Grafo {
         
         //Generar grafo
         ManejadorArchivos ma = new ManejadorArchivos();
-        String graficoCompleto = "digraph G{\n" +  "   label =  Grafo general;\n"  + grafico + "}";
+        String graficoCompleto = "digraph G{\n" +  "   label =  \"Grafo general\";\n"  + grafico + "}";
         ma.escribirArchivo("./Grafo.dot", graficoCompleto);
         ma.generarGrafo("./Grafo.dot", "GrafoGeneral");
     }
@@ -368,7 +370,7 @@ public class Grafo {
         
         //Generar el grafo.
         ManejadorArchivos ma = new ManejadorArchivos();
-        String graficoCompleto = "digraph G{\n" +  "   label =  Grafo mejor "+criterio+";\n"  + grafico;
+        String graficoCompleto = "digraph G{\n" +  "   label =  Grafo mejor \""+criterio+"\";\n"  + grafico;
         if(mejorCamino != null){
             //Agregar los distintivos
             graficoCompleto += mejorCamino.obtenerCaminoResaltado();
@@ -414,6 +416,10 @@ public class Grafo {
     
     public LinkedList<Nodo> obtenerNodosNoDirigidos(){
         return nodosNoDirigidos;
+    }
+    
+    public void establecerDirigido(boolean dirigido){
+        this.dirigido = dirigido; 
     }
     
 }

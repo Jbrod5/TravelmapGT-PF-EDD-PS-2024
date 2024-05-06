@@ -1,12 +1,17 @@
 package main.java.com.jbrod.travelmapgt.ui;
 
+import java.io.File;
 import main.java.com.jbrod.travelmapgt.app.structs.ArchivoEntrada;
 import main.java.com.jbrod.travelmapgt.app.structs.Grafo;
 import main.java.com.jbrod.travelmapgt.app.structs.Nodo;
 import java.util.LinkedList;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel; 
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 /**
  * Ventana principal del programa.
@@ -15,11 +20,12 @@ import javax.swing.JLabel;
 public class VentanaPrincipal extends javax.swing.JFrame {
 
     private Grafo grafo;
-    private LinkedList<Nodo> listaNodos; 
+    private LinkedList<Nodo> listaNodos;
     
     
     public VentanaPrincipal() {
         initComponents();
+        
         generarGrafo();
         setVisible(true);
         
@@ -27,7 +33,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         cbxOpcionMejorCamino.addItem("Menor distancia");
         cbxOpcionMejorCamino.addItem("Menor desgaste");
         cbxOpcionMejorCamino.addItem("Menor tiempo");
-        
+
     }
     
     private void generarGrafo(){
@@ -49,6 +55,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         grafo = new Grafo();
         ArchivoEntrada entrada = new ArchivoEntrada();
         entrada.generarInstancias(path, grafo);
+        
+        grafo.establecerDirigido(chxDirigido.isSelected());
         grafo.generarGrafico();
         
         obtenerListaNodos();
@@ -76,16 +84,34 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         if(chkVerMejorcamino.isSelected()){
             //Cargar el mejor camino
             grafo.generarGraficoMejor(cbxOpcionMejorCamino.getSelectedIndex() +1);
-            pathGrafo = "/GrafoMejorCamino.png";
+            pathGrafo = "./GrafoMejorCamino.png";
         }else{
             pathGrafo = "./GrafoGeneral.png";
         }
-        scrlGrafo.removeAll();
+        //scrlGrafo.removeAll();
         //Crear la imagen
         JLabel imagen = new JLabel();
-        imagen.setIcon(new ImageIcon(pathGrafo));
-        //Cargar la imagen
+        ImageIcon imageIcon = new ImageIcon(pathGrafo);
+        imagen.setIcon(imageIcon);
+        
+        scrlGrafo = new JScrollPane();
         scrlGrafo.setViewportView(imagen);
+        //pnlImagen.add(imagen);
+        //pnlImagen.add(new JLabel("feli"));
+        
+        //Cargar la imagen
+        //
+;
+        File archivo = new File(pathGrafo);
+
+        if (archivo.exists()) {
+            System.out.println("El archivo existe");
+        } else {
+            System.out.println("El archivo no existe");
+        }
+
+        scrlGrafo.updateUI();
+        repaint();
     }
     
     
@@ -127,6 +153,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         scrlGrafo = new javax.swing.JScrollPane();
+        pnlImagen = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -308,6 +335,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        javax.swing.GroupLayout pnlImagenLayout = new javax.swing.GroupLayout(pnlImagen);
+        pnlImagen.setLayout(pnlImagenLayout);
+        pnlImagenLayout.setHorizontalGroup(
+            pnlImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 665, Short.MAX_VALUE)
+        );
+        pnlImagenLayout.setVerticalGroup(
+            pnlImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 553, Short.MAX_VALUE)
+        );
+
+        scrlGrafo.setViewportView(pnlImagen);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -366,6 +406,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel pnlImagen;
     private javax.swing.JScrollPane scrlGrafo;
     // End of variables declaration//GEN-END:variables
 }
