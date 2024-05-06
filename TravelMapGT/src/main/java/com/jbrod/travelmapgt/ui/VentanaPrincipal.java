@@ -26,6 +26,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private LinkedList<Nodo> listaNodos;
     private LinkedList<Nodo> listaPasos;
     private Nodo nodoActual; 
+    
+    private int tiempoTotal; 
+    private int distanciaTotal;
+    private int desgasteTotal;
     //private JScrollPane scrlGrafo;
     //private JLabel imagen;
     
@@ -41,6 +45,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         cbxOpcionMejorCamino.addItem("Menor distancia");
         cbxOpcionMejorCamino.addItem("Menor desgaste");
         cbxOpcionMejorCamino.addItem("Menor tiempo");
+        
+        tiempoTotal = 0;
+        distanciaTotal = 0;
+        desgasteTotal = 0;
         //imagen = new JLabel();
         //scrlGrafo.setViewportView(imagen);
     }
@@ -127,7 +135,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         
         //Cargar la imagen
         //
-;
+        ;
         File archivo = new File(pathGrafo);
 
         if (archivo.exists()) {
@@ -175,9 +183,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         cbxPaso = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        lblTiempo = new javax.swing.JLabel();
+        lblDesgaste = new javax.swing.JLabel();
+        lblDistancia = new javax.swing.JLabel();
         scrlGrafo = new javax.swing.JScrollPane();
         lblImagen = new javax.swing.JLabel();
 
@@ -319,11 +327,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Estadisticas"));
 
-        jLabel4.setText("jLabel4");
+        lblTiempo.setText("Tiempo");
 
-        jLabel5.setText("jLabel5");
+        lblDesgaste.setText("Desgaste");
 
-        jLabel6.setText("jLabel6");
+        lblDistancia.setText("Distancia");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -332,21 +340,21 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
+                    .addComponent(lblTiempo)
+                    .addComponent(lblDesgaste)
+                    .addComponent(lblDistancia))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel5)
+                .addComponent(lblTiempo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addComponent(lblDesgaste)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDistancia)
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -421,7 +429,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         try{
+            Nodo temporal = nodoActual;
             nodoActual = listaPasos.get(cbxPaso.getSelectedIndex());
+            
+            tiempoTotal += temporal.obtenerTiempo(nodoActual.obtenerNombre());
+            distanciaTotal += temporal.obtenerDistancia(nodoActual.obtenerNombre());
+            desgasteTotal += temporal.obtenerResistencia(nodoActual.obtenerNombre());
+            
+            lblTiempo.setText("Tiempo: " + tiempoTotal);
+            lblDistancia.setText("Distancia: " + distanciaTotal);
+            lblDesgaste.setText("Desgaste: " + desgasteTotal);
+            
             grafo.establecerAcual(nodoActual, this);
             listaPasos = nodoActual.obtenerAdyacentes();
             colocarNuevosPasos();
@@ -437,6 +455,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             grafo.establecerAcual(nodoActual, this);
             listaPasos = nodoActual.obtenerAdyacentes();
             colocarNuevosPasos();
+            
+            tiempoTotal = 0; 
+            distanciaTotal = 0;
+            desgasteTotal = 0;
         }catch(Exception e){
             
         }
@@ -477,15 +499,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JLabel lblDesgaste;
+    private javax.swing.JLabel lblDistancia;
     private javax.swing.JLabel lblImagen;
+    private javax.swing.JLabel lblTiempo;
     private javax.swing.JScrollPane scrlGrafo;
     // End of variables declaration//GEN-END:variables
 }
