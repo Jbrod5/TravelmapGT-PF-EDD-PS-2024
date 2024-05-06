@@ -248,13 +248,38 @@ public class Grafo {
     
     /* - - - - - - - - - - - - - - - - - - RECORRIDOS - - - - - - - - - - - - - - - - - - */
     // Establecer el tipo de recorrido
-    public void establecerCaminata(){
+    public LinkedList<Nodo> establecerCaminata(){
         dirigido = false; 
+        return nodosNoDirigidos;
     } 
-    public void establecerConduccion(){
+    public LinkedList<Nodo> establecerConduccion(){
         dirigido = true;
-    }   
+        return nodosDirigidos;
+    }
+    
+    public void establecerDestino(String destino){
+        this.destino = destino; 
+    }
+    
+    //Establece el actual / permite que se mueva
+    public void establecerAcual(Nodo nodoActual){
+        if(destino.equals(nodoActual.obtenerNombre())){
+            //Informar al fronend que ya se llego
+        }else{
+            //Recalcular rutas
+            origen = nodoActual.obtenerNombre();
+            if(dirigido){
+                buscarRutasConducir(origen, destino);
+            }else{
+                buscarRutasConducir(origen, destino);
+            }
+            //Actualizar el frontend
+        }
+    }
 
+    
+    
+    
 
     
 
@@ -354,6 +379,9 @@ public class Grafo {
     
     
     
+    
+    
+    
     public void imprimirDirigido(){
         System.out.println("DIRIGIDO");
         for (Nodo nodosDirigido : nodosDirigidos) {
@@ -375,4 +403,13 @@ public class Grafo {
             System.out.println("");
         }
     }
+        
+    public LinkedList<Nodo> obtenerNodosDirigidos(){
+        return nodosDirigidos;
+    }
+    
+    public LinkedList<Nodo> obtenerNodosNoDirigidos(){
+        return nodosNoDirigidos;
+    }
+    
 }

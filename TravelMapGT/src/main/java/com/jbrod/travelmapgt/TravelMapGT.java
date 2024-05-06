@@ -5,6 +5,7 @@ package com.jbrod.travelmapgt;
 
 import com.jbrod.travelmapgt.app.structs.ArchivoEntrada;
 import com.jbrod.travelmapgt.app.structs.Grafo;
+import com.jbrod.travelmapgt.ui.VentanaPrincipal;
 import java.util.Scanner;
 
 /**
@@ -15,7 +16,7 @@ public class TravelMapGT {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-        
+        /*
         System.out.println("Ingrese el path del archivo");
         Scanner scanner = new Scanner(System.in); 
         String path = scanner.nextLine();
@@ -48,7 +49,8 @@ public class TravelMapGT {
         grafo.buscarRutasConducir(origen, destino);
         System.out.println("");
         System.out.println("NO DIRIGIDO");
-        grafo.buscarRutasCaminar(origen, destino);
+        grafo.buscarRutasCaminar(origen, destino);*/
+        VentanaPrincipal ventana = new VentanaPrincipal();
         
     }
 }
