@@ -1,7 +1,7 @@
 
-package com.jbrod.travelmapgt.app;
+package main.java.com.jbrod.travelmapgt.app;
 
-import com.jbrod.travelmapgt.app.structs.Grafo;
+import main.java.com.jbrod.travelmapgt.app.structs.Grafo;
 
 /**
  *

@@ -1,4 +1,4 @@
-package com.jbrod.travelmapgt.app.utilidades;
+package main.java.com.jbrod.travelmapgt.app.utilidades;
 
 import java.io.File;
 import java.io.FileWriter;

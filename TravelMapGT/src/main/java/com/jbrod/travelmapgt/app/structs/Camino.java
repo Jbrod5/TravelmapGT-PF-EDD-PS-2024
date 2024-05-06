@@ -1,5 +1,5 @@
 
-package com.jbrod.travelmapgt.app.structs;
+package main.java.com.jbrod.travelmapgt.app.structs;
 
 import java.util.LinkedList;
 

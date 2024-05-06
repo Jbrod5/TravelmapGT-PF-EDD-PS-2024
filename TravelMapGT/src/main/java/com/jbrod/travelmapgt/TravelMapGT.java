@@ -1,12 +1,12 @@
 /*
  */
 
-package com.jbrod.travelmapgt;
+package main.java.com.jbrod.travelmapgt;
 
-import com.jbrod.travelmapgt.app.structs.ArchivoEntrada;
-import com.jbrod.travelmapgt.app.structs.Grafo;
-import com.jbrod.travelmapgt.ui.VentanaPrincipal;
+import main.java.com.jbrod.travelmapgt.app.structs.ArchivoEntrada;
+import main.java.com.jbrod.travelmapgt.app.structs.Grafo;
 import java.util.Scanner;
+import main.java.com.jbrod.travelmapgt.ui.VentanaPrincipal;
 
 /**
  *

@@ -1,7 +1,7 @@
 
-package com.jbrod.travelmapgt.app.structs;
+package main.java.com.jbrod.travelmapgt.app.structs;
 
-import com.jbrod.travelmapgt.app.utilidades.ManejadorArchivos;
+import main.java.com.jbrod.travelmapgt.app.utilidades.ManejadorArchivos;
 import java.util.LinkedList;
 
 /**
@@ -325,6 +325,7 @@ public class Grafo {
        
         //1. obtener las rutas correspondientes.
         LinkedList<Camino> rutas;
+        String criterio =""; 
         if(dirigido){
             rutas = rutasConduciendo;
         }else{
@@ -344,13 +345,16 @@ public class Grafo {
                     case 1:
                         //Menor distancia
                         op = ruta.obtenerDistancia();
+                        criterio = "Menor Distancia";
                         break;
                     case 2: 
                         //Menor desgaste
                         op = ruta.obtenerDesgaste();
+                        criterio = "Menor Desgaste";
                     default:
                         //Menor tiempo
                         op = ruta.obtenerTiempo();
+                        criterio = "Menor Tiempo";
                         break;
                 }
                 
@@ -364,7 +368,7 @@ public class Grafo {
         
         //Generar el grafo.
         ManejadorArchivos ma = new ManejadorArchivos();
-        String graficoCompleto = "digraph G{\n" +  "   label =  Grafo mejor camino;\n"  + grafico;
+        String graficoCompleto = "digraph G{\n" +  "   label =  Grafo mejor "+criterio+";\n"  + grafico;
         if(mejorCamino != null){
             //Agregar los distintivos
             graficoCompleto += mejorCamino.obtenerCaminoResaltado();
