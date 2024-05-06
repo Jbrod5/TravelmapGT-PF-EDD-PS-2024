@@ -9,12 +9,16 @@ import java.util.LinkedList;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel; 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import main.java.com.jbrod.travelmapgt.app.structs.Camino;
 
 /**
  * Ventana principal del programa.
@@ -27,9 +31,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private LinkedList<Nodo> listaPasos;
     private Nodo nodoActual; 
     
+    private LinkedList<Camino> posiblesRutas;
+    
     private int tiempoTotal; 
     private int distanciaTotal;
     private int desgasteTotal;
+    
+    private String rutas;
+    
     //private JScrollPane scrlGrafo;
     //private JLabel imagen;
     
@@ -150,7 +159,50 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     
     
     
+    public void definirRutas(){
     
+        if(posiblesRutas!= null){
+            int contador = 0; 
+            String[] cabeceras = new String [4];
+            cabeceras[0] = "Ruta";
+            cabeceras[1] = "Tiempo";
+            cabeceras[2] = "Desgaste";
+            cabeceras[3] = "Distancia";
+
+            String [][] tabla = new String[posiblesRutas.size()][4];
+            for (Camino ruta : posiblesRutas) {
+                tabla[contador][0] = ruta.obtenerRuta();
+                tabla[contador][1] = Integer.toString(ruta.obtenerTiempo());
+                tabla[contador][2] = Integer.toString(ruta.obtenerDesgaste());
+                tabla[contador][3] = Integer.toString(ruta.obtenerDistancia());
+
+                contador ++;
+            }
+
+            // Crear la ventana de diálogo
+            JDialog dialog = new JDialog();
+            JTable table = new JTable(new DefaultTableModel(tabla, cabeceras));
+
+            // Agregar la tabla a un JScrollPane
+            JScrollPane scrollPane = new JScrollPane(table);
+
+            // Agregar el JScrollPane a la ventana de diálogo
+            dialog.add(scrollPane);
+
+            // Mostrar la ventana de diálogo
+            dialog.pack();
+            dialog.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(null, "Todavía no hay posibles rutas");
+        }
+        
+        
+        
+    }
+    
+    public void establecerPosiblesRutas(LinkedList<Camino> rutas){
+        posiblesRutas = rutas; 
+    }
     
     
     
@@ -186,6 +238,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         lblTiempo = new javax.swing.JLabel();
         lblDesgaste = new javax.swing.JLabel();
         lblDistancia = new javax.swing.JLabel();
+        txfPasos = new javax.swing.JTextField();
+        btnVerRutas = new javax.swing.JButton();
         scrlGrafo = new javax.swing.JScrollPane();
         lblImagen = new javax.swing.JLabel();
 
@@ -304,15 +358,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbxPaso, 0, 175, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(cbxPaso, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -333,6 +384,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         lblDistancia.setText("Distancia");
 
+        txfPasos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txfPasosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -343,7 +400,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addComponent(lblTiempo)
                     .addComponent(lblDesgaste)
                     .addComponent(lblDistancia))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(txfPasos)
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -354,8 +414,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(lblDesgaste)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDistancia)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txfPasos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        btnVerRutas.setText("Ver posibles rutas");
+        btnVerRutas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerRutasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -367,7 +435,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnVerRutas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -381,7 +450,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(btnVerRutas)
+                .addContainerGap())
         );
 
         lblImagen.setOpaque(true);
@@ -395,7 +466,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrlGrafo, javax.swing.GroupLayout.DEFAULT_SIZE, 683, Short.MAX_VALUE)
+                .addComponent(scrlGrafo, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -440,6 +511,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             lblDistancia.setText("Distancia: " + distanciaTotal);
             lblDesgaste.setText("Desgaste: " + desgasteTotal);
             
+            txfPasos.setText(txfPasos.getText() + " " + nodoActual.obtenerNombre());
+            
             grafo.establecerAcual(nodoActual, this);
             listaPasos = nodoActual.obtenerAdyacentes();
             colocarNuevosPasos();
@@ -455,6 +528,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             grafo.establecerAcual(nodoActual, this);
             listaPasos = nodoActual.obtenerAdyacentes();
             colocarNuevosPasos();
+            
+            txfPasos.setText(nodoActual.obtenerNombre());
             
             tiempoTotal = 0; 
             distanciaTotal = 0;
@@ -473,6 +548,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         
         }
     }//GEN-LAST:event_cbxDestinoActionPerformed
+
+    private void txfPasosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfPasosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txfPasosActionPerformed
+
+    private void btnVerRutasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerRutasActionPerformed
+        // TODO add your handling code here:
+        definirRutas();
+    }//GEN-LAST:event_btnVerRutasActionPerformed
  
     
     private void colocarNuevosPasos(){
@@ -489,6 +573,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnVerRutas;
     private javax.swing.JComboBox<String> cbxDestino;
     private javax.swing.JComboBox<String> cbxOpcionMejorCamino;
     private javax.swing.JComboBox<String> cbxOrigen;
@@ -509,5 +594,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblImagen;
     private javax.swing.JLabel lblTiempo;
     private javax.swing.JScrollPane scrlGrafo;
+    private javax.swing.JTextField txfPasos;
     // End of variables declaration//GEN-END:variables
 }

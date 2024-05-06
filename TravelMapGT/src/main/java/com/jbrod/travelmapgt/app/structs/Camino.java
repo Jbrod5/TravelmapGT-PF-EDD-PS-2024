@@ -51,6 +51,14 @@ public class Camino {
         return distancia;
     }
     
+    public String obtenerRuta(){
+        String rt = "";
+        for (Nodo nodo : camino) {
+            rt += nodo.obtenerNombre() + " ";
+        }
+        return rt;
+    }
+    
     
     public String obtenerCaminoResaltado(){
         String resaltado = "";

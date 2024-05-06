@@ -270,13 +270,17 @@ public class Grafo {
         }else{
             //Recalcular rutas
             origen = nodoActual.obtenerNombre();
+            LinkedList<Camino> rutasGeneradas;
             if(dirigido){
                 buscarRutasConducir(origen, destino);
+                rutasGeneradas = rutasConduciendo;
             }else{
-                buscarRutasConducir(origen, destino);
+                buscarRutasCaminar(origen, destino);
+                rutasGeneradas = rutasCaminando;
             }
             //Actualizar el frontend
             ventana.actualizarImagenGrafo();
+            ventana.establecerPosiblesRutas(rutasGeneradas);
         }
     }
 
